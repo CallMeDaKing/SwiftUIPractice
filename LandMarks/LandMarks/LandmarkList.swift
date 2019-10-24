@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LandmarkList: View {
     
-    @EnvironmentObject private var userData: UserDatas
+    @EnvironmentObject private var userData: UserData
 
     var body: some View {
         NavigationView {
@@ -39,6 +39,6 @@ struct LandmarkList_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue:deviceName))
                 .previewDisplayName(deviceName)
         }
-         .environmentObject(UserDatas())
+         .environmentObject(UserData())
     }
 }

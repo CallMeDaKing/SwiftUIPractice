@@ -18,7 +18,6 @@ struct LandmarkList: View {
                 Toggle(isOn: $userData.showFavoritesOnly) {
                     Text("hello swiftUI open")
                 }
-                
                 ForEach (userData.landmarks){ Landmark in
                     if Landmark.isFavorite || !self.userData.showFavoritesOnly {
                     NavigationLink(destination: LandmarkDetail(landmark: Landmark)){

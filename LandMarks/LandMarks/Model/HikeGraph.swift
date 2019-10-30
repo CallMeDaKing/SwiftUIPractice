@@ -23,13 +23,51 @@ func magnitude(of range:Range<Double>) -> Double {
 }
     
 struct HikeGraph: View {
+    
+    var hike: Hike
+    var path: KeyPath<Hike.observation, Range<Double>>
+    
+    var color: Color{
+        switch path {
+        case \.elevation:
+            return .gray
+        case \.heartRate:
+            return Color(hue: 0, saturation: 0.5, brightness: 0.6)
+        case \.pace:
+            return Color(hue: 0, saturation: 0.5, brightness: 0.6)
+        default:
+            return .black
+        }
+    }
+    
     var body: some View {
-        Text("Hello World!")
+        let data = hike.observations
+        let overallRange = rangeOfRanges(data.lazy.map{ $0[keyPath: self.path]})
+        let maxMagnitude = data.map { magnitude(of: $0[keyPath: path])}.max()!
+        let hightRatio = 1 - CGFloat(maxMagnitude / magnitude(of: overallRange))
+        
+        return GeometryReader { proxy in
+            HStack(alignment: .bottom, spacing: proxy.size.width / 120) {
+                ForEach(data.indices) { index in
+                    GraphCapsule(
+                        index: index, height: proxy.size.height, range: data[index][keyPath: self.path], overallRange: overallRange)
+                        .colorMultiply(self.color)
+                }.offset(x: 0, y: proxy.size.height * hightRatio)
+            }
+        }
     }
 }
 
 struct HikeGraph_Previews: PreviewProvider {
     static var previews: some View {
-        HikeGraph()
+        
+        Group{
+            HikeGraph(hike: hikeData[0], path: \.elevation)
+                .frame(height: 200)
+            HikeGraph(hike: hikeData[0], path: \.elevation)
+                .frame(height: 200)
+            HikeGraph(hike: hikeData[0], path: \.elevation)
+            .frame(height: 200)
+        }
     }
 }

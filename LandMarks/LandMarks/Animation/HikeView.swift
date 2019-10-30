@@ -20,11 +20,31 @@ struct HikeView: View {
     }
     
     var body: some View {
-//        VStack {
-//            HStack {
-//
-//            }
-//        }
+        VStack {
+            HStack {
+                HikeGraph(hike: hike, path: \.elevation)
+                .frame(width: 50, height: 30)
+                .animation(nil)
+                
+                VStack (alignment: .leading){
+                    Text(verbatim: hike.name)
+                        .font(.headline)
+                    Text(verbatim: hike.distanceText)
+                }
+                Spacer()
+                
+                Button(action: {
+                    
+                    withAnimation{
+                        self.showDetail.toggle()
+                    }
+                }){
+                    Image(systemName: "chevron.right.circle")
+                        .imageScale(.large)
+                        .rotationEffect(.degrees(showDetail? 90 : 0))
+                }
+            }
+        }
     }
 }
 

@@ -8,13 +8,13 @@
 
 import SwiftUI
 
-func rangeOfRanges<C: Collection>(_ ranges:C) -> Range<Double>
+func rangeOfRanges<C: Collection>(_ ranges: C) -> Range<Double>
     where C.Element == Range<Double> {
         guard !ranges.isEmpty else {
-            return 0..<0
+            return 0 ..< 0
         }
-        let low = ranges.lazy.map{$0.lowerBound }.min()!
-        let hight = ranges.lazy.map{$0.lowerBound}.min()!
+        let low = ranges.lazy.map{$0.lowerBound}.min()!
+        let hight = ranges.lazy.map{$0.upperBound}.max()!
         return low ..< hight
 }
 
@@ -25,16 +25,16 @@ func magnitude(of range:Range<Double>) -> Double {
 struct HikeGraph: View {
     
     var hike: Hike
-    var path: KeyPath<Hike.observation, Range<Double>>
+    var path: KeyPath<Hike.Observation, Range<Double>>
     
     var color: Color{
         switch path {
         case \.elevation:
             return .gray
         case \.heartRate:
-            return Color(hue: 0, saturation: 0.5, brightness: 0.6)
+            return Color(hue: 0, saturation: 0.5, brightness: 0.7)
         case \.pace:
-            return Color(hue: 0, saturation: 0.5, brightness: 0.6)
+            return Color(hue: 0.7, saturation: 0.4, brightness: 0.7)
         default:
             return .black
         }
@@ -50,8 +50,11 @@ struct HikeGraph: View {
             HStack(alignment: .bottom, spacing: proxy.size.width / 120) {
                 ForEach(data.indices) { index in
                     GraphCapsule(
-                        index: index, height: proxy.size.height, range: data[index][keyPath: self.path], overallRange: overallRange)
-                        .colorMultiply(self.color)
+                        index: index,
+                        height: proxy.size.height,
+                        range: data[index][keyPath: self.path],
+                        overallRange: overallRange
+                    ).colorMultiply(self.color)
                 }.offset(x: 0, y: proxy.size.height * hightRatio)
             }
         }
@@ -60,13 +63,12 @@ struct HikeGraph: View {
 
 struct HikeGraph_Previews: PreviewProvider {
     static var previews: some View {
-        
         Group{
             HikeGraph(hike: hikeData[0], path: \.elevation)
                 .frame(height: 200)
-            HikeGraph(hike: hikeData[0], path: \.elevation)
+            HikeGraph(hike: hikeData[0], path: \.heartRate)
                 .frame(height: 200)
-            HikeGraph(hike: hikeData[0], path: \.elevation)
+            HikeGraph(hike: hikeData[0], path: \.pace)
             .frame(height: 200)
         }
     }

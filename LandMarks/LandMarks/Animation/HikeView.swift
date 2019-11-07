@@ -34,7 +34,7 @@ struct HikeView: View {
                 Spacer()
                 
                 Button(action: {
-                    withAnimation(.easeInOut(duration: 4)) {
+                    withAnimation {
                         self.showDetail.toggle()
                     }
                 }){
@@ -61,6 +61,7 @@ struct HikeView_Previews: PreviewProvider {
         VStack {
             HikeView(hike: hikeData[0])
                 .padding()
+                .transition(.slide)
             Spacer()
         }
     }
